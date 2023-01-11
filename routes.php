@@ -12,3 +12,8 @@ get('/products', function () {
   global $product;
   $product->index();
 });
+
+get('/products/$id', function ($id) {
+  global $product;
+  $product->show($id);
+});
