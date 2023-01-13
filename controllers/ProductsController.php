@@ -6,7 +6,7 @@ class ProductsController
 {
   public function index()
   {
-    require_once './models/products.php';
+    require_once './models/product/index.php';
     echo json_encode($result);
   }
 

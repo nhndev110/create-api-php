@@ -8,12 +8,12 @@ use App\Controllers\ProductsController;
 
 $product = new ProductsController();
 
-get('/products', function () {
+get('/api/products', function () {
   global $product;
   $product->index();
 });
 
-get('/products/$id', function ($id) {
+get('/api/products/$id', function ($id) {
   global $product;
   $product->show($id);
 });

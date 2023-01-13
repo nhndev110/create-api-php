@@ -1,5 +1,10 @@
 <?php
 
+
+class Product
+{
+}
+
 $connect = mysqli_connect('localhost', 'root', '1', 'create-api-php');
 mysqli_set_charset($connect, 'utf8');
 
