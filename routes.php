@@ -17,3 +17,8 @@ get('/api/products/$id', function ($id) {
   global $product;
   $product->show($id);
 });
+
+delete('/api/products/$id', function ($id) {
+  global $product;
+  $product->destroy($id);
+});

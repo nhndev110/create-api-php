@@ -2,18 +2,16 @@
 
 namespace App\Model\Product;
 
-require_once './models/Connect.php';
+require_once './models/dbConnect.php';
 
-use App\Model\Connect;
+use App\Model\dbConnect;
 
 class ProductModel
 {
-  public function all(): array
+  public function all()
   {
-    $connect = new Connect();
-    $sql = "SELECT * FROM products";
-    $response = $connect->query_result($sql);
-
+    $response = (new dbConnect())->selectAll("products");
+    
     $list_product = [];
     foreach ($response as $product) {
       $list_product[] = [
@@ -25,27 +23,27 @@ class ProductModel
     $result = [
       'data' => $list_product,
       'statusCode' => 200,
-      'statusText' => 'ok',
     ];
 
     return $result;
   }
 
-  public function find($id): array
+  public function find($id)
   {
-    $connect = mysqli_connect('localhost', 'root', '1', 'create-api-php');
-    mysqli_set_charset($connect, 'utf8');
-
-    $sql = "SELECT * FROM products
-    WHERE id = '$id'";
-    $response = mysqli_query($connect, $sql);
-    $product = mysqli_fetch_array($response);
-
+    $result = (new dbConnect())->findId("products", $id);
     $product = [
-      'id' => $product['id'],
-      'name' => $product['name'],
+      'data' => [
+        'id' => $result['id'],
+        'name' => $result['name'],
+      ],
+      'statusCode' => 200,
     ];
 
     return $product;
+  }
+
+  public function delete($id)
+  {
+    (new dbConnect())->deleteId("products", $id);
   }
 }
