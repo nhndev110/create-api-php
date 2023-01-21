@@ -8,9 +8,16 @@ use App\Model\dbConnect;
 
 class ProductModel
 {
+  private string $table;
+
+  public function __construct()
+  {
+    $this->table = "products";
+  }
+
   public function all()
   {
-    $response = (new dbConnect())->selectAll("products");
+    $response = (new dbConnect())->selectAll($this->table);
     
     $list_product = [];
     foreach ($response as $product) {
@@ -30,7 +37,7 @@ class ProductModel
 
   public function find($id)
   {
-    $result = (new dbConnect())->findId("products", $id);
+    $result = (new dbConnect())->findId($this->table, $id);
     $product = [
       'data' => [
         'id' => $result['id'],
@@ -44,6 +51,11 @@ class ProductModel
 
   public function delete($id)
   {
-    (new dbConnect())->deleteId("products", $id);
+    (new dbConnect())->deleteId($this->table, $id);
+  }
+
+  public function store($param)
+  {
+    (new dbConnect())->store($this->table, $param);
   }
 }

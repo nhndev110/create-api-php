@@ -32,7 +32,7 @@ class dbConnect
 		
 		return $res;
 	}
-
+	
 	public function findId($table, $id)
 	{
 		$sql = "SELECT * FROM {$table}
@@ -43,9 +43,30 @@ class dbConnect
 		return $result;
 	}
 
-	public function deleteId($table, $id)
+	public function deleteId ($table, $id)
 	{
 		$sql = "DELETE FROM $table WHERE id = {$id}";
+		mysqli_query($this->initConnect(), $sql);
+	}
+
+	public function store ($table, $param)
+	{
+		$arr_len = count($param);
+		$idx = 1;
+		$sql = "INSERT INTO {$table} ( ";
+		$values = "VALUES ( ";
+
+		foreach ($param as $key => $value) {
+			$sql .= "$key";
+			$values .= "'{$value}'";
+
+			$values .=  ($idx < $arr_len) ? ", " : " );";
+			$sql .= ($idx < $arr_len) ? ", " : " )\n";
+
+			$idx++;
+		}
+		
+		$sql .= $values;
 		mysqli_query($this->initConnect(), $sql);
 	}
 }
