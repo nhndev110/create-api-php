@@ -28,8 +28,11 @@ class ProductModel
     }
 
     $result = [
-      'data' => $list_product,
-      'statusCode' => 200,
+      'status' => 'success',
+      'data' => [
+        'products' => $list_product
+      ],
+      'message' => NULL,
     ];
 
     return $result;
@@ -37,16 +40,33 @@ class ProductModel
 
   public function find($id)
   {
-    $result = (new dbConnect())->findId($this->table, $id);
-    $product = [
-      'data' => [
-        'id' => $result['id'],
-        'name' => $result['name'],
-      ],
-      'statusCode' => 200,
-    ];
+    try {
+      $product = (new dbConnect())->findId($this->table, $id);
 
-    return $product;
+      if (empty($product)) {
+        throw new \Exception("INVALID ID");
+      }
+      
+      $response = [
+        'status' => 'success',
+        'data' => [
+          'product' => [
+            'id' => $product['id'],
+            'name' => $product['name'],
+          ],
+        ],
+        'message' => NULL,
+      ];
+
+    } catch (\Exception $e) {
+      $response = [
+        'status' => 'error',
+        'data' => NULL,
+        'message' => $e->getMessage(),
+      ];
+    }
+
+    return $response;
   }
 
   public function delete($id)
@@ -56,6 +76,9 @@ class ProductModel
 
   public function store($param)
   {
+    if ($_POST['']) {
+      
+    }
     (new dbConnect())->store($this->table, $param);
   }
 }
