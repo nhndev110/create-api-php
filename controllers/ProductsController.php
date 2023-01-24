@@ -6,31 +6,40 @@ require_once './models/product/ProductModel.php';
 
 use App\Model\Product\ProductModel;
 
+use \Exception;
+
 class ProductsController
 {
   public function __construct()
   {
-    header('Content-type: application/json');
+    header('Content-Type: application/json; charset=UTF-8');
   }
 
   public function index()
   {
-    $result = (new ProductModel())->all();
-    echo json_encode($result);
+    $response = (new ProductModel())->all();
+    echo json_encode($response);
   }
 
   public function show($id)
   {
-    $result = (new ProductModel())->find($id);
-    echo json_encode($result);
+    $response = (new ProductModel())->find($id);
+    echo json_encode($response);
   }
 
   public function store()
   {
-    (new ProductModel())->store($_POST);
+    $response = (new ProductModel())->store($_POST);
+    echo json_encode($response);
   }
 
-  public function destroy($id)
+  public function update()
+  {
+    $response = (new ProductModel())->update($_POST);
+    echo json_encode($response);
+  }
+
+  public function delete($id)
   {
     (new ProductModel())->delete($id);
   }

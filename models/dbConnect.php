@@ -33,7 +33,7 @@ class dbConnect
 		return $res;
 	}
 	
-	public function findId($table, $id)
+	public function findId($table, $id = "")
 	{
 		$sql = "SELECT * FROM {$table}
 		WHERE id = {$id}";
@@ -42,21 +42,16 @@ class dbConnect
 
 		return $result;
 	}
-
-	public function deleteId ($table, $id)
+	
+	public function store($table, $cols)
 	{
-		$sql = "DELETE FROM $table WHERE id = {$id}";
-		mysqli_query($this->initConnect(), $sql);
-	}
-
-	public function store ($table, $param)
-	{
-		$arr_len = count($param);
+		// $cols chứa những col hợp lệ
+		$arr_len = count($cols);
 		$idx = 1;
 		$sql = "INSERT INTO {$table} ( ";
 		$values = "VALUES ( ";
 
-		foreach ($param as $key => $value) {
+		foreach ($cols as $key => $value) {
 			$sql .= "$key";
 			$values .= "'{$value}'";
 
@@ -67,6 +62,43 @@ class dbConnect
 		}
 		
 		$sql .= $values;
+		
+		$conn = $this->initConnect();
+		mysqli_query($conn, $sql);
+		$cols['id'] = mysqli_insert_id($conn);
+		return $cols;
+	}
+
+	public function updateId($table, $cols)
+	{
+		$arr_len = count($cols);
+		$idx = 1;
+		$subsql = "";
+
+		foreach ($cols as $key => $value) {
+			$subsql .= "$key=$value";
+
+			$sql .= ($idx < $arr_len) ? ",\n" : "";
+
+			$idx++;
+		}
+
+		$sql = "UPDATE {$table}
+		SET
+			$subsql
+		WHERE id = '$id'";
+
+		die($sql);
+
+		$conn = $this->initConnect();
+		mysqli_query($conn, $sql);
+		$cols['id'] = mysqli_insert_id($conn);
+		return $cols;
+	}
+
+	public function deleteId($table, $id)
+	{
+		$sql = "DELETE FROM $table WHERE id = {$id}";
 		mysqli_query($this->initConnect(), $sql);
 	}
 }

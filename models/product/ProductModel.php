@@ -6,6 +6,8 @@ require_once './models/dbConnect.php';
 
 use App\Model\dbConnect;
 
+use \Exception;
+
 class ProductModel
 {
   private string $table;
@@ -44,9 +46,9 @@ class ProductModel
       $product = (new dbConnect())->findId($this->table, $id);
 
       if (empty($product)) {
-        throw new \Exception("INVALID ID");
+        throw new Exception("INVALID ID");
       }
-      
+
       $response = [
         'status' => 'success',
         'data' => [
@@ -58,11 +60,61 @@ class ProductModel
         'message' => NULL,
       ];
 
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
       $response = [
         'status' => 'error',
         'data' => NULL,
         'message' => $e->getMessage(),
+      ];
+    }
+
+    return $response;
+  }
+
+  public function store($cols)
+  {
+    try {
+      if (empty($cols['name'])) {
+        throw new Exception('Missing require params');
+      }
+      
+      $res = (new dbConnect())->store($this->table, $cols);
+
+      $response = [
+        "status" => "success",
+        "data" => $res,
+        "message" => NULL,
+      ];
+    } catch(Exception $e) {
+      $response = [
+        "status" => "error",
+        "data" => NULL,
+        "message" => $e->getMessage(),
+      ];
+    }
+
+    return $response;
+  }
+
+  public function update($cols)
+  {
+    try {
+      if (empty($cols['id']) || empty($cols['name'])) {
+        throw new Exception('Missing require params');
+      }
+      
+      $res = (new dbConnect())->updateId($this->table, $cols);
+
+      $response = [
+        "status" => "success",
+        "data" => $res,
+        "message" => NULL,
+      ];
+    } catch(Exception $e) {
+      $response = [
+        "status" => "error",
+        "data" => NULL,
+        "message" => $e->getMessage(),
       ];
     }
 
@@ -74,11 +126,4 @@ class ProductModel
     (new dbConnect())->deleteId($this->table, $id);
   }
 
-  public function store($param)
-  {
-    if ($_POST['']) {
-      
-    }
-    (new dbConnect())->store($this->table, $param);
-  }
 }

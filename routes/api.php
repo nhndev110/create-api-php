@@ -18,6 +18,10 @@ post('/api/products', function () {
   (new ProductsController())->store();
 });
 
+put('/api/products', function () {
+  (new ProductsController())->update();
+});
+
 delete('/api/products/$id', function ($id) {
-  (new ProductsController())->destroy($id);
+  (new ProductsController())->delete($id);
 });
