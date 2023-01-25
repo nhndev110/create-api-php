@@ -102,6 +102,11 @@ class ProductModel
       if (empty($cols['id']) || empty($cols['name'])) {
         throw new Exception('Missing require params');
       }
+
+      $product = (new dbConnect())->findId($this->table, $cols['id']);
+      if (empty($product)) {
+        throw new Exception('INVALID ID');
+      }
       
       $res = (new dbConnect())->updateId($this->table, $cols);
 

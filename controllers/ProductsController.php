@@ -35,7 +35,8 @@ class ProductsController
 
   public function update()
   {
-    $response = (new ProductModel())->update($_POST);
+    parse_str(file_get_contents("php://input"), $put_data);
+    $response = (new ProductModel())->update($put_data);
     echo json_encode($response);
   }
 

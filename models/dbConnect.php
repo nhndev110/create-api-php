@@ -35,8 +35,7 @@ class dbConnect
 	
 	public function findId($table, $id = "")
 	{
-		$sql = "SELECT * FROM {$table}
-		WHERE id = {$id}";
+		$sql = "SELECT * FROM {$table} WHERE id = {$id};";
 		$res = mysqli_query($this->initConnect(), $sql);
 		$result = mysqli_fetch_array($res);
 
@@ -56,7 +55,7 @@ class dbConnect
 			$values .= "'{$value}'";
 
 			$values .=  ($idx < $arr_len) ? ", " : " );";
-			$sql .= ($idx < $arr_len) ? ", " : " )\n";
+			$sql .= ($idx < $arr_len) ? ", " : " ) ";
 
 			$idx++;
 		}
@@ -71,34 +70,29 @@ class dbConnect
 
 	public function updateId($table, $cols)
 	{
-		$arr_len = count($cols);
+		$arr_len = count($cols) - 1;
 		$idx = 1;
 		$subsql = "";
 
 		foreach ($cols as $key => $value) {
-			$subsql .= "$key=$value";
+			if ($key == 'id')
+				continue;
+			
+			$subsql .= "$key = '{$value}'";
 
-			$sql .= ($idx < $arr_len) ? ",\n" : "";
-
+			$subsql .= ($idx < $arr_len) ? ", " : "";
+			
 			$idx++;
 		}
 
-		$sql = "UPDATE {$table}
-		SET
-			$subsql
-		WHERE id = '$id'";
-
-		die($sql);
-
-		$conn = $this->initConnect();
-		mysqli_query($conn, $sql);
-		$cols['id'] = mysqli_insert_id($conn);
+		$sql = "UPDATE {$table} SET $subsql WHERE id = '{$cols['id']}';";
+		mysqli_query($this->initConnect(), $sql);
 		return $cols;
 	}
 
 	public function deleteId($table, $id)
 	{
-		$sql = "DELETE FROM $table WHERE id = {$id}";
+		$sql = "DELETE FROM $table WHERE id = {$id};";
 		mysqli_query($this->initConnect(), $sql);
 	}
 }
