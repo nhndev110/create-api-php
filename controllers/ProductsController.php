@@ -4,9 +4,7 @@ namespace App\Controllers;
 
 require_once './models/product/ProductModel.php';
 
-use App\Model\Product\ProductModel;
-
-use \Exception;
+use App\Models\Product\ProductModel;
 
 class ProductsController
 {
@@ -42,6 +40,7 @@ class ProductsController
 
   public function delete($id)
   {
-    (new ProductModel())->delete($id);
+    $response = (new ProductModel())->delete($id);
+    echo json_encode($response);
   }
 }

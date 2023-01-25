@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Model\Product;
+namespace App\Models\Product;
 
 require_once './models/dbConnect.php';
 
-use App\Model\dbConnect;
+use App\Models\dbConnect;
 
 use \Exception;
 
@@ -103,12 +103,13 @@ class ProductModel
         throw new Exception('Missing require params');
       }
 
-      $product = (new dbConnect())->findId($this->table, $cols['id']);
-      if (empty($product)) {
+      $conn = (new dbConnect());
+      $is_exist = $conn->findId($this->table, $cols['id']);
+      if (empty($is_exist)) {
         throw new Exception('INVALID ID');
       }
       
-      $res = (new dbConnect())->updateId($this->table, $cols);
+      $res = $conn->updateId($this->table, $cols);
 
       $response = [
         "status" => "success",
@@ -128,7 +129,26 @@ class ProductModel
 
   public function delete($id)
   {
-    (new dbConnect())->deleteId($this->table, $id);
-  }
+    try {
+      $conn = (new dbConnect());
+      $is_exist = $conn->findId($this->table, $id);
+      if (empty($is_exist)) {
+        throw new Exception('INVALID ID');
+      }
 
+      $conn->deleteId($this->table, $id);
+
+      $response = [
+        "status" => "success",
+        "message" => NULL,
+      ];
+    } catch (Exception $e) {
+      $response = [
+        "status" => "error",
+        "message" => $e->getMessage(),
+      ];
+    }
+
+    return $response;
+  }
 }

@@ -1,22 +1,13 @@
 <?php
 
-namespace App\Model;
+namespace App\Models;
 
-class dbConnect
+require_once __DIR__ . '\dbConfig.php';
+
+use App\Models\dbConfig;
+
+class dbConnect extends dbConfig
 {
-	private string $hostname;
-	private string $username;
-	private string $password;
-	private string $database;
-
-	public function __construct()
-	{
-	  $this->hostname = "localhost";
-	  $this->username = "root";
-	  $this->password = "1";
-	  $this->database = "create-api-php";
-	}
-
 	public function initConnect()
 	{
 		$connect = mysqli_connect($this->hostname, $this->username, $this->password, $this->database);
@@ -35,7 +26,7 @@ class dbConnect
 	
 	public function findId($table, $id = "")
 	{
-		$sql = "SELECT * FROM {$table} WHERE id = {$id};";
+		$sql = "SELECT * FROM {$table} WHERE id = '{$id}';";
 		$res = mysqli_query($this->initConnect(), $sql);
 		$result = mysqli_fetch_array($res);
 
@@ -79,7 +70,6 @@ class dbConnect
 				continue;
 			
 			$subsql .= "$key = '{$value}'";
-
 			$subsql .= ($idx < $arr_len) ? ", " : "";
 			
 			$idx++;
@@ -92,7 +82,7 @@ class dbConnect
 
 	public function deleteId($table, $id)
 	{
-		$sql = "DELETE FROM $table WHERE id = {$id};";
+		$sql = "DELETE FROM $table WHERE id = '{$id}';";
 		mysqli_query($this->initConnect(), $sql);
 	}
 }
